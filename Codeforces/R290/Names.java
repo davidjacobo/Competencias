@@ -2,6 +2,7 @@ import java.util.Scanner;
 import java.util.ArrayList;
 
 public class Names{
+	boolean fail;
 	public static void main(String[] args){
 		Names exe = new Names();
 		exe.begin();
@@ -19,13 +20,16 @@ public class Names{
 			list[i] = l.next();
 		}
 
+		fail = false;
 		for(int i=0;i<N;i++){
 			for(int j=i+1;j<N;j++){
 				compareThisShit(list[i],list[j],graph);
 			}
 		}
 
-		topsort(graph);
+		if(fail) System.out.println("Impossible");
+		else
+			topsort(graph);
 	}
 
 	void topsort(boolean[][] graph){
@@ -73,6 +77,10 @@ public class Names{
 				insert(graph, A.charAt(i)-'a' , B.charAt(j)-'a');
 				return;
 			}
+		}
+
+		if(lenB < lenA){
+			fail = true;
 		}
 	}
 
