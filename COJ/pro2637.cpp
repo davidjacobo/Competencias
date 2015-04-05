@@ -1,34 +1,40 @@
-#include <iostream>
+#include <cstdio>
+#include <algorithm>
 #define MAX_N 100001
 using namespace std;
-
-long long int arr[MAX_N];
-
-void swap(int *a,int *b){
-    *a^= *b;
-    *b^= *a;
-    *a^= *b;
-}
+typedef long long int lli;
+lli sums[MAX_N];
 
 int main(){
-    int T,N,Q;
+    int T;
+    int N,Q;
     int x,y;
-    cin>>T;
+    bool first = true;
+    scanf("%d",&T);
     while(T--){
-        cin>>N>>Q;
-        arr[0] = 0;
+        scanf("%d %d",&N,&Q);
+        sums[0] = 0;
         for(int i=1;i<=N;i++){
-            cin>>arr[i];
-            arr[i]+= arr[i-1];
+            scanf("%d",&x);
+            sums[i] = x + sums[i-1];
         }
-        
+
+        if(!first) printf("\n");
+        first = false;
+
         while(Q--){
-            cin>>x>>y;
-            x++; y++;
-            if(x>y) swap(&x,&y);
-            cout<<arr[y]-arr[x-1]<<endl;
+            scanf("%d %d",&x,&y);
+            if(x>y) swap(x,y);
+            x++;
+            y++;
+            if(x>N) {
+                printf("0\n");
+            } else {
+                if(y>N) 
+                    y = N;
+                printf("%lld\n",sums[y]-sums[x-1]);
+            }
         }
-        if(T) cout<<endl;
     }
     return 0;
 }
