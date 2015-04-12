@@ -12,8 +12,8 @@ vector<int> output;
 void dfs(int level,int n){
     int size = graph[level].size();
     if(size==0){
-        if(level==0) return;
-        dfs(max(0,level-3),n);
+        if(level==0 || level-3<0) return;
+        dfs(level-3,n);
         return;
     }
     int y = graph[level][size-1];
