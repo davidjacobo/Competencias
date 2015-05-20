@@ -3,16 +3,16 @@
 #include <queue>
 #define MAX_V 300001
 #define MAX_E 300001
-#define INF 10000000000000000L
+#define INF 100000000000000000L
 
 using namespace std;
 
 typedef pair<int,int> ii;
 typedef pair<ii,int> ii_i;
-typedef pair<ii,ii> ii_ii;
 typedef vector<ii_i> vii_i;
-typedef vector<ii_ii> vii_ii;
 typedef long long ll;
+typedef pair<ll,int> lli;
+typedef pair<lli,int> lli_i;
 
 vii_i graph[MAX_V];
 vector<int> output;
@@ -20,7 +20,7 @@ int V,E, edges[MAX_E], parent[MAX_V];
 ll distances[MAX_V];
 
 ll dijkstra(int source){
-    priority_queue<ii_i> pq;
+    priority_queue<lli_i> pq;
     ll w, D, ans;
     int e, y, start = source;
 
@@ -30,7 +30,7 @@ ll dijkstra(int source){
     parent[source] = 0;
     ans = 0;
 
-    pq.push(ii_i(ii(0,source),0));
+    pq.push(lli_i(lli(0,source),0));
 
     while(!pq.empty()){
         source = pq.top().first.second;
@@ -48,7 +48,7 @@ ll dijkstra(int source){
             if(D < distances[y]){
                 parent[y] = e;
                 distances[y] = D;
-                pq.push(ii_i(ii(-D, y), e));
+                pq.push(lli_i(lli(-D, y), e));
             } else if(D==distances[y] && graph[source][i].first.first < edges[parent[y]]){
                 parent[y] = e;
             }
