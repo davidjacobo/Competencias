@@ -14,8 +14,9 @@ double dp(int n){
     for(int i=0;i<n;++i){
         for(int j=0;j<n;++j){
             int max_step = min(10, n-j);
+            double add = dag[i][j]/max_step;
             for(int step=1;step<=max_step;++step){
-                dag[i+1][j+step]+= (dag[i][j]/(max_step));
+                dag[i+1][j+step]+= add;
             }
         }
     }
@@ -29,10 +30,12 @@ double dp(int n){
 }
 
 int main(){
+    char line[100];
     int T,n;
-    scanf("%d",&T);
+    sscanf(gets(line),"%d", &T);
+
     while(T--){
-        scanf("%d",&n);
+        sscanf(gets(line), "%d", &n);
         printf("%lf\n", dp(n));
     }
     return 0;
