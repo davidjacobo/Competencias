@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <queue>
+#include <algorithm>
 #include <vector>
 #define MAX_V 100001
 #define INF (1<<30)
@@ -10,16 +11,17 @@ typedef pair<int,int> ii;
 typedef vector<ii> vii;
 typedef vector<int> vi;
 
-vii graph[MAX_V];
-int V,E,D,distances[2][MAX_V];
+vii graph[MAX_V],t_dist[2];
+int V,E,D,distances[2][MAX_V], power_sum[MAX_V];
 
 void dijkstra(int source){
     priority_queue<ii> pq;
-    int dim = source;
+    int dim = source, ind = 0;
     for(int i=0;i<V;++i)    distances[dim][i] = INF;
 
     distances[dim][source] = 0;
     pq.push(ii(0, source));
+    power_sum[ind++] = 0;
 
     while(!pq.empty()){
         int y = pq.top().second;
@@ -27,6 +29,8 @@ void dijkstra(int source){
         pq.pop();
 
         if(distances[dim][y] < dis) continue;
+        t_dist[dim].push_back(ii(dis, y));
+        power_sum[ind++] = dis + power_sum[ind-2];
 
         for(int i=0;i<graph[y].size();++i){
             int v = graph[y][i].first;
@@ -38,6 +42,8 @@ void dijkstra(int source){
             }
         }
     }
+
+    t_dist[dim].push_back(ii(INF,INF));
 }
 
 int main(){
@@ -63,19 +69,17 @@ int main(){
     D = distances[1][0];
 
     ll ans = 0;
-    for(int i=0;i<V-1;++i){
-        //Could need to improve here, maybe prunning starting points
-        if(distances[0][i] >= D && distances[1][i] >= D) continue;
-        for(int j=i+1;j<V;++j){
-            w = distances[0][i] + distances[1][j];
-            if(w < D){
-                ans+= (D-w-1);
-            }
-            w = distances[0][j] + distances[1][i];
-            if(w < D){
-                ans+= (D-w-1);
-            }
-        }
+
+    for(int i=0;i<V;++i){
+        vector<ii>::iterator it = upper_bound(t_dist[1].begin(), t_dist[1].end(), ii(D-t_dist[0][i].first-2,INF));
+        int j = it-t_dist[1].begin();
+        ans+= (D*j-j-power_sum[j]-t_dist[0][i].first*j);
+
+        /*if(distances[0][i]+distances[1][i] < D){
+            ans+= (D-distances[0][i]-distances[1][i]-1);
+            printf("reducing to: %lld\n",ans);
+        }*/
+
     }
     printf("%lld\n",ans);
     return 0;
