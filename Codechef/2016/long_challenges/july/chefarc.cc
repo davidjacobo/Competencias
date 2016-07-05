@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <cstring>
-#define MAX_DIM 101
+#define MAX_DIM 102
 #define INF 1<<30
 
 using namespace std;
@@ -32,14 +32,16 @@ void capture(int N,int M) {
 int diagonal(int x,int y,int counter,int N,int M,int add_x,int add_y,int base_dist,int robot) {
   while(counter-->0) {
     if(x > 0 && x <= N && y > 0 && y <= M) {
-      if(robot==1 && seen_k2[x][y]) return dist[x][y] + 1;
-      if(robot==2 && seen_k1[x][y]) return dist[x][y] + 1;
-      if(dist[x][y] ==INF && !blocked[x][y]) {
-        dist[x][y] = base_dist + 1;
-        don_vector.push_back(ii_i(ii(x,y), robot));
-      }   
-      if(robot==1) seen_k1[x][y] = true;
-      if(robot==2) seen_k2[x][y] = true;
+      if(robot==1 && seen_k2[x][y]) return base_dist + 1;
+      if(robot==2 && seen_k1[x][y]) return base_dist + 1;
+      if(!blocked[x][y]) {
+        if(dist[x][y] == INF) {
+          dist[x][y] = base_dist + 1;
+          don_vector.push_back(ii_i(ii(x,y), robot));
+        }
+        if(robot==1) seen_k1[x][y] = true;
+        else seen_k2[x][y] = true;
+      }
     }
     x+= add_x;
     y+= add_y;
