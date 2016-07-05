@@ -8,6 +8,7 @@ using namespace std;
 typedef pair<int,int> ii;
 typedef pair<ii, int> ii_i;
 typedef vector<ii_i> vii_i;
+vii_i don_vector;
 
 int dist[MAX_DIM][MAX_DIM];
 bool blocked[MAX_DIM][MAX_DIM];
@@ -15,12 +16,12 @@ bool seen_k1[MAX_DIM][MAX_DIM];
 bool seen_k2[MAX_DIM][MAX_DIM];
 
 void capture(int N,int M) {
-  memset(dist, INF, sizeof dist);
   memset(seen_k1, false, sizeof seen_k1);
   memset(seen_k2, false, sizeof seen_k2);
   int input;
-  for(int i=0;i<N;++i) {
-    for(int j=0;j<M;++j) {
+  for(int i=1;i<=N;++i) {
+    for(int j=1;j<=M;++j) {
+      dist[i][j] = INF;
       cin>>input;
       if(input==1) blocked[i][j] = true;
       else blocked[i][j] = false;
@@ -31,9 +32,12 @@ void capture(int N,int M) {
 int diagonal(int x,int y,int counter,int N,int M,int add_x,int add_y,int base_dist,int robot) {
   while(counter-->0) {
     if(x > 0 && x <= N && y > 0 && y <= M) {
-      if(robot==1 && seen_k2[x][y]) return dist[x][y];
-      if(robot==2 && seen_k1[x][y]) return dist[x][y];
-      if(dist[x][y] ==INF) dist[x][y] = base_dist + 1;
+      if(robot==1 && seen_k2[x][y]) return dist[x][y] + 1;
+      if(robot==2 && seen_k1[x][y]) return dist[x][y] + 1;
+      if(dist[x][y] ==INF && !blocked[x][y]) {
+        dist[x][y] = base_dist + 1;
+        don_vector.push_back(ii_i(ii(x,y), robot));
+      }   
       if(robot==1) seen_k1[x][y] = true;
       if(robot==2) seen_k2[x][y] = true;
     }
@@ -61,7 +65,7 @@ int flood(int x,int y,int reach,int N,int M,int robot) {
 int solve(int N, int M, int K1, int K2) {
   if(M==1) return 0;
   // Pre-work needed
-  vii_i don_vector;
+  don_vector.clear();
   seen_k1[1][1] = true;
   seen_k2[1][M] = true;
   don_vector.push_back(ii_i(ii(1,1),1));
