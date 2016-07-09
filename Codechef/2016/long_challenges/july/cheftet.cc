@@ -40,6 +40,28 @@ bool is_valid_array(int pivot, int N) {
   return true;
 }
 
+int solve(int N) {
+  // Ok, this is the fun part, lets build all the possible combinations for
+  // the first number on the array and use it as a reference.
+  int ans = -1;
+  for(int i=0;i<4;++i){
+  memset(used, false, sizeof used);
+  int pivot = A[0];
+  if((1&i)!=0) {
+    used[0] = true;
+    pivot+= B[0];
+  }
+  if((2&i)!=0) {
+    used[1] = true;
+    pivot+= B[1];
+  }
+
+  if(is_valid_array(pivot, N))
+    ans = max(ans, pivot);
+  }
+  return ans;
+}
+
 int main() {
   int T, N;
   cin>>T;
@@ -51,25 +73,10 @@ int main() {
     if(N==1) {
       cout<<(A[0]+B[0])<<endl;
     } else {
-      // Ok, this is the fun part, lets build all the possible combinations for
-      // the first number on the array and use it as a reference.
-
-      int ans = -1;
-      for(int i=0;i<4;++i){
-        memset(used, false, sizeof used);
-        int pivot = A[0];
-        if((1&i)!=0) {
-          used[0] = true;
-          pivot+= B[0];
-        } 
-        if((2&i)!=0) {
-          used[1] = true;
-          pivot+= B[1];
-        }
-        
-        if(is_valid_array(pivot, N)) 
-          ans = max(ans, pivot);
-      }
+      int ans = solve(N);
+      reverse(A, A+N);
+      reverse(B, B+N);
+      ans = max(ans, solve(N));
       cout<<ans<<endl;
     }
     
